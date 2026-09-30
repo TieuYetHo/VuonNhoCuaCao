@@ -1383,13 +1383,7 @@ button{
 
 <audio
     id="bgMusic"
-    loop
     preload="auto">
-
-    <source
-        src="assets/music.mp3"
-        type="audio/mpeg">
-
 </audio>
 
 
@@ -1668,12 +1662,12 @@ const characters = [
     {
         id:"c1",
 
-        name:"Tên Nhân Vật 1",
+        name:"Phó Triều Dương",
 
-        tag:"#ngọt_ngào",
+        tag:"#Trùng sinh #TXVT #Ngọt",
 
         avatar:
-            "assets/avatar1.jpg",
+            "assets/",
 
         detailImage:
             "assets/detail1.jpg",
@@ -1884,11 +1878,191 @@ let musicPlaying = false;
    NHẠC
 ========================================================= */
 
+/* ================================
+   PLAYLIST NHẠC
+================================ */
+
+const playlist = [
+
+    "assets/Gói Con Tim Làm Quà.mp3",
+    "assets/Trong Tiếng Hát Của Em _ 我的歌声里.mp3",
+    "assets/Người Yêu Bỏ Lỡ _ 爱人错过.mp3",
+    "assets/Hẹn Em Ở Lần Yêu Thứ 2.mp3",
+    "assets/海屿你.mp3",
+    "assets/Giữa Đại Lộ Đông Tây.mp3",
+    "assets/Cinnamon Girl.mp3",
+    "assets/Chemtrails Over The Country Club.mp3",
+    "assets/Say Yes To Heaven.mp3",
+
+];
+
+let currentSong = 0;
+
 const music =
     document.getElementById("bgMusic");
 
 const musicBtn =
     document.getElementById("musicBtn");
+
+let musicPlaying = false;
+
+
+/* ================================
+   PHÁT BÀI HIỆN TẠI
+================================ */
+
+function playCurrentSong(){
+
+    music.src =
+        playlist[currentSong];
+
+    music.load();
+
+    music.play()
+
+    .then(()=>{
+
+        musicPlaying = true;
+
+        musicBtn.classList.add(
+            "playing"
+        );
+
+    })
+
+    .catch(()=>{
+
+        musicPlaying = false;
+
+        musicBtn.classList.remove(
+            "playing"
+        );
+
+    });
+
+}
+
+
+/* ================================
+   TỰ ĐỘNG CHUYỂN BÀI
+================================ */
+
+music.addEventListener(
+    "ended",
+    ()=>{
+
+        currentSong++;
+
+        if(
+            currentSong >= playlist.length
+        ){
+
+            currentSong = 0;
+
+        }
+
+        playCurrentSong();
+
+    }
+);
+
+
+/* ================================
+   NÚT BẬT / TẮT NHẠC
+================================ */
+
+musicBtn.addEventListener(
+    "click",
+    ()=>{
+
+        if(music.paused){
+
+            if(!music.src){
+
+                playCurrentSong();
+
+            }
+
+            else{
+
+                music.play();
+
+                musicPlaying = true;
+
+                musicBtn.classList.add(
+                    "playing"
+                );
+
+            }
+
+        }
+
+        else{
+
+            music.pause();
+
+            musicPlaying = false;
+
+            musicBtn.classList.remove(
+                "playing"
+            );
+
+        }
+
+    }
+);
+
+
+/* ================================
+   THỬ PHÁT NHẠC
+================================ */
+
+function tryPlayMusic(){
+
+    if(!music.src){
+
+        playCurrentSong();
+
+    }
+
+    else{
+
+        music.play()
+
+        .then(()=>{
+
+            musicPlaying = true;
+
+            musicBtn.classList.add(
+                "playing"
+            );
+
+        })
+
+        .catch(()=>{});
+
+    }
+
+}
+
+
+/* ================================
+   CLICK ĐẦU TIÊN
+================================ */
+
+document.addEventListener(
+    "click",
+    ()=>{
+
+        if(!musicPlaying){
+
+            tryPlayMusic();
+
+        }
+
+    },
+    {once:true}
+);
 
 
 function tryPlayMusic(){

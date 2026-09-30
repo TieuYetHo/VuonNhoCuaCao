@@ -1,0 +1,3483 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Vườn Nho Của Cáo</title>
+
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500;1,600&family=Quicksand:wght@300;400;500;600&display=swap');
+
+
+/* ================================
+   CÀI ĐẶT CHUNG
+================================ */
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    margin:0;
+    background:#fffaf5;
+    color:#543746;
+    font-family:"Quicksand",sans-serif;
+}
+
+button,
+input,
+textarea{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+
+/* ================================
+   TRANG MỞ ĐẦU
+================================ */
+
+#opening{
+
+    min-height:100vh;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-align:center;
+
+    position:relative;
+
+    background:
+        linear-gradient(
+            rgba(55,20,35,.30),
+            rgba(55,20,35,.45)
+        ),
+
+        url("assets/opening.jpg")
+        center/cover
+        no-repeat;
+}
+
+
+.opening-content{
+
+    width:min(950px,90%);
+
+    color:white;
+
+    text-shadow:
+        0 4px 25px rgba(0,0,0,.5);
+}
+
+
+.opening-content h1{
+
+    font-family:"Cormorant Garamond",serif;
+
+    font-style:italic;
+
+    font-weight:600;
+
+    font-size:
+        clamp(48px,8vw,95px);
+
+    line-height:1;
+
+    margin:0 0 25px;
+}
+
+
+.opening-content p{
+
+    font-family:"Cormorant Garamond",serif;
+
+    font-style:italic;
+
+    font-weight:400;
+
+    font-size:
+        clamp(18px,2.5vw,28px);
+
+    line-height:1.5;
+
+    margin:0 auto 38px;
+
+    max-width:800px;
+}
+
+
+/* NÚT THAM QUAN */
+
+.main-btn{
+
+    border:1px solid
+        rgba(255,255,255,.8);
+
+    background:
+        rgba(255,255,255,.16);
+
+    color:white;
+
+    padding:15px 34px;
+
+    border-radius:999px;
+
+    backdrop-filter:blur(10px);
+
+    transition:.3s;
+
+    box-shadow:
+        0 12px 35px
+        rgba(0,0,0,.2);
+}
+
+
+.main-btn:hover{
+
+    transform:
+        translateY(-4px);
+
+    background:
+        rgba(255,255,255,.3);
+}
+
+
+/* ================================
+   ĐĨA NHẠC
+================================ */
+
+.music-player{
+
+    position:fixed;
+
+    right:25px;
+
+    bottom:25px;
+
+    z-index:1000;
+
+    width:68px;
+
+    height:68px;
+
+    border-radius:50%;
+
+    border:
+        1px solid
+        rgba(255,255,255,.7);
+
+    background:
+        rgba(255,255,255,.85);
+
+    color:#7b2948;
+
+    font-size:26px;
+
+    display:grid;
+
+    place-items:center;
+
+    box-shadow:
+        0 15px 40px
+        rgba(60,20,40,.2);
+}
+
+
+.music-player.playing{
+
+    animation:
+        spin 5s linear infinite;
+}
+
+
+@keyframes spin{
+
+    to{
+        transform:rotate(360deg);
+    }
+
+}
+
+
+/* ================================
+   LOADING
+================================ */
+
+#loading{
+
+    display:none;
+
+    min-height:100vh;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-align:center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff8f5,
+            #f5e7ed
+        );
+}
+
+
+.loading-box{
+
+    width:min(680px,88%);
+}
+
+
+.loading-box h2{
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size:45px;
+
+    font-style:italic;
+
+    color:#7b2948;
+}
+
+
+.progress-wrap{
+
+    height:18px;
+
+    background:#ead8df;
+
+    border-radius:30px;
+
+    overflow:hidden;
+
+    box-shadow:
+        inset 0 2px 6px
+        #d7bdc7;
+}
+
+
+#progress{
+
+    height:100%;
+
+    width:0%;
+
+    background:
+        linear-gradient(
+            90deg,
+            #8c3155,
+            #d5a6b8,
+            #8c3155
+        );
+
+    border-radius:30px;
+
+    transition:
+        width .06s;
+}
+
+
+#loadingText{
+
+    margin-top:20px;
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-style:italic;
+
+    font-size:25px;
+
+    color:#704054;
+}
+
+
+/* ================================
+   GIAO DIỆN VƯỜN NHO
+================================ */
+
+#garden{
+
+    display:none;
+
+    min-height:100vh;
+
+    background:
+
+        radial-gradient(
+            circle at 10% 10%,
+            rgba(219,178,193,.22),
+            transparent 28%
+        ),
+
+        radial-gradient(
+            circle at 90% 30%,
+            rgba(201,164,108,.15),
+            transparent 25%
+        ),
+
+        #fffaf5;
+}
+
+
+/* ================================
+   HEADER
+================================ */
+
+.garden-header{
+
+    position:sticky;
+
+    top:0;
+
+    z-index:50;
+
+    background:
+        rgba(255,250,244,.85);
+
+    backdrop-filter:
+        blur(16px);
+
+    border-bottom:
+        1px solid #eadde1;
+}
+
+
+.header-inner{
+
+    max-width:1200px;
+
+    margin:auto;
+
+    padding:16px 24px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+}
+
+
+.brand{
+
+    margin-right:auto;
+}
+
+
+.brand h1{
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-style:italic;
+
+    font-size:34px;
+
+    color:#7b2948;
+
+    margin:0;
+}
+
+
+.brand p{
+
+    margin:0;
+
+    font-size:13px;
+
+    color:#967080;
+
+    letter-spacing:1px;
+}
+
+
+.nav-btn{
+
+    border:
+        1px solid #dcc7cf;
+
+    background:#fff7fa;
+
+    color:#7b2948;
+
+    border-radius:999px;
+
+    padding:10px 17px;
+
+    transition:.25s;
+}
+
+
+.nav-btn:hover{
+
+    transform:
+        translateY(-2px);
+
+    background:#f8e9ee;
+}
+
+
+/* ================================
+   HERO
+================================ */
+
+.hero-garden{
+
+    max-width:1200px;
+
+    margin:auto;
+
+    padding:
+        85px 24px
+        45px;
+
+    text-align:center;
+}
+
+
+.hero-garden h2{
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size:60px;
+
+    font-style:italic;
+
+    font-weight:500;
+
+    color:#7b2948;
+
+    margin:0;
+}
+
+
+.hero-garden p{
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size:25px;
+
+    margin:10px 0 25px;
+}
+
+
+.seed-btn{
+
+    background:#7b2948;
+
+    color:white;
+
+    border:0;
+
+    padding:
+        14px 28px;
+
+    border-radius:999px;
+
+    box-shadow:
+        0 12px 30px
+        rgba(123,41,72,.25);
+
+    transition:.3s;
+}
+
+
+.seed-btn:hover{
+
+    transform:
+        translateY(-3px);
+}
+
+
+/* ================================
+   PROFILE
+================================ */
+
+.characters{
+
+    max-width:1200px;
+
+    margin:auto;
+
+    padding:
+        30px 24px
+        100px;
+}
+
+
+.section-title{
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-style:italic;
+
+    font-size:43px;
+
+    text-align:center;
+
+    color:#7b2948;
+
+    margin:
+        20px 0 35px;
+}
+
+
+.profile-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap:22px;
+}
+
+
+.profile{
+
+    background:
+        rgba(255,255,255,.85);
+
+    border:
+        1px solid #eadde1;
+
+    border-radius:24px;
+
+    padding:12px;
+
+    box-shadow:
+        0 18px 50px
+        rgba(75,30,50,.13);
+
+    transition:.3s;
+
+    cursor:pointer;
+}
+
+
+.profile:hover{
+
+    transform:
+        translateY(-8px);
+}
+
+
+.avatar{
+
+    width:100%;
+
+    aspect-ratio:1/1.1;
+
+    object-fit:cover;
+
+    border-radius:18px;
+
+    background:#eadce1;
+}
+
+
+.profile h3{
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size:27px;
+
+    margin:
+        12px 6px 2px;
+
+    color:#51283b;
+}
+
+
+.tag{
+
+    font-size:12px;
+
+    color:#9c7081;
+
+    margin:
+        0 6px 12px;
+}
+
+
+.hearts{
+
+    font-size:14px;
+
+    margin:
+        0 6px 7px;
+
+    color:#a23960;
+}
+
+
+.mini{
+
+    font-size:12px;
+
+    color:#9a7b87;
+}
+
+
+/* ================================
+   MODAL
+================================ */
+
+.overlay{
+
+    position:fixed;
+
+    inset:0;
+
+    background:
+        rgba(38,17,27,.62);
+
+    backdrop-filter:
+        blur(9px);
+
+    z-index:200;
+
+    display:none;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:20px;
+}
+
+
+.modal{
+
+    background:#fffaf7;
+
+    border-radius:28px;
+
+    max-width:900px;
+
+    width:100%;
+
+    max-height:92vh;
+
+    overflow:auto;
+
+    box-shadow:
+        0 30px 90px
+        rgba(30,10,20,.3);
+
+    position:relative;
+}
+
+
+.close{
+
+    position:absolute;
+
+    right:18px;
+
+    top:14px;
+
+    width:40px;
+
+    height:40px;
+
+    border:0;
+
+    border-radius:50%;
+
+    background:#f5e5ea;
+
+    color:#7b2948;
+
+    z-index:2;
+
+    font-size:20px;
+}
+
+
+.detail-img{
+
+    width:100%;
+
+    max-height:520px;
+
+    object-fit:cover;
+
+    border-radius:
+        28px 28px 0 0;
+
+    background:#eadce1;
+}
+
+
+.detail-body{
+
+    padding:28px;
+}
+
+
+.detail-body h2{
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size:44px;
+
+    font-style:italic;
+
+    color:#7b2948;
+
+    margin:0;
+}
+
+
+.detail-actions{
+
+    display:flex;
+
+    gap:12px;
+
+    flex-wrap:wrap;
+
+    margin:25px 0;
+}
+
+
+.action-btn{
+
+    border:0;
+
+    border-radius:999px;
+
+    padding:
+        13px 20px;
+
+    background:#7b2948;
+
+    color:white;
+
+    transition:.25s;
+}
+
+
+.action-btn:hover{
+
+    transform:
+        translateY(-2px);
+}
+
+
+.action-btn.alt{
+
+    background:#f0dfe6;
+
+    color:#7b2948;
+}
+
+
+.action-btn.gold{
+
+    background:#c9a46c;
+
+    color:white;
+}
+
+
+.detail-hearts{
+
+    font-size:18px;
+
+    color:#a23960;
+}
+
+
+/* ================================
+   FEEDBACK
+================================ */
+
+.feedback-area{
+
+    margin-top:25px;
+
+    padding-top:25px;
+
+    border-top:
+        1px solid #eadde1;
+}
+
+
+.feedback-form{
+
+    display:grid;
+
+    gap:10px;
+}
+
+
+.feedback-form input,
+.feedback-form textarea{
+
+    width:100%;
+
+    border:
+        1px solid #dfcbd3;
+
+    background:white;
+
+    border-radius:14px;
+
+    padding:
+        12px 14px;
+
+    outline:none;
+}
+
+
+.feedback-form textarea{
+
+    min-height:100px;
+
+    resize:vertical;
+}
+
+
+.feedback-list{
+
+    display:grid;
+
+    gap:10px;
+
+    margin-top:16px;
+
+    max-height:320px;
+
+    overflow:auto;
+}
+
+
+.feedback-item{
+
+    padding:13px 15px;
+
+    background:white;
+
+    border:
+        1px solid #eee0e5;
+
+    border-radius:14px;
+}
+
+
+.feedback-item b{
+
+    color:#7b2948;
+}
+
+
+.feedback-item small{
+
+    color:#9a7b87;
+}
+
+
+.feedback-item p{
+
+    margin:6px 0 0;
+
+    line-height:1.5;
+}
+
+
+/* ================================
+   TAROT
+================================ */
+
+.tarot-modal{
+
+    max-width:1050px;
+}
+
+
+.tarot-step{
+
+    padding:35px;
+
+    text-align:center;
+}
+
+
+.tarot-step h2{
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size:45px;
+
+    font-style:italic;
+
+    color:#7b2948;
+}
+
+
+.choice-row{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:10px;
+
+    flex-wrap:wrap;
+}
+
+
+.choice{
+
+    min-width:52px;
+
+    border:
+        1px solid #dec7d0;
+
+    background:white;
+
+    border-radius:15px;
+
+    padding:
+        13px 17px;
+
+    color:#7b2948;
+}
+
+
+.choice.selected{
+
+    background:#7b2948;
+
+    color:white;
+}
+
+
+/* ================================
+   TAROT HÌNH QUẠT
+================================ */
+
+.tarot-fan{
+
+    min-height:430px;
+
+    position:relative;
+
+    margin:
+        20px auto;
+
+    max-width:950px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:flex-end;
+
+    padding-bottom:30px;
+
+    overflow:hidden;
+}
+
+
+.card{
+
+    width:86px;
+
+    height:150px;
+
+    border-radius:12px;
+
+    border:
+        2px solid #d7b58b;
+
+    background:
+        linear-gradient(
+            135deg,
+            #4a1830,
+            #8f4664
+        );
+
+    color:#e8cf9d;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-align:center;
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size:22px;
+
+    box-shadow:
+        0 12px 22px
+        rgba(60,20,40,.2);
+
+    cursor:pointer;
+
+    position:absolute;
+
+    bottom:30px;
+
+    transform-origin:
+        bottom center;
+
+    transition:.35s;
+}
+
+
+.card:hover{
+
+    filter:brightness(1.15);
+
+    bottom:50px;
+}
+
+
+.tarot-result{
+
+    display:grid;
+
+    gap:16px;
+
+    text-align:left;
+}
+
+
+.tarot-card-result{
+
+    padding:18px;
+
+    background:white;
+
+    border:
+        1px solid #eadde1;
+
+    border-radius:18px;
+}
+
+
+.tarot-card-result h3{
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size:27px;
+
+    color:#7b2948;
+
+    margin:
+        0 0 5px;
+}
+
+
+/* ================================
+   THÔNG BÁO
+================================ */
+
+#toast{
+
+    position:fixed;
+
+    left:50%;
+
+    bottom:25px;
+
+    transform:
+        translate(-50%,30px);
+
+    opacity:0;
+
+    z-index:9999;
+
+    background:#42182b;
+
+    color:white;
+
+    padding:
+        12px 20px;
+
+    border-radius:999px;
+
+    transition:.3s;
+}
+
+
+#toast.show{
+
+    opacity:1;
+
+    transform:
+        translate(-50%,0);
+}
+
+
+/* ================================
+   MOBILE
+================================ */
+
+@media(max-width:900px){
+
+    .profile-grid{
+
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+}
+
+
+@media(max-width:550px){
+
+    .profile-grid{
+
+        grid-template-columns:1fr;
+    }
+
+    .hero-garden h2{
+
+        font-size:45px;
+    }
+
+    .header-inner{
+
+        flex-wrap:wrap;
+    }
+
+    .brand{
+
+        width:100%;
+    }
+
+    .card{
+
+        width:64px;
+
+        height:120px;
+
+        font-size:14px;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- ======================================
+     TRANG MỞ ĐẦU
+====================================== -->
+
+<section id="opening">
+
+    <div class="opening-content">
+
+        <h1>
+            Chào Mừng Bạn Đến
+            Vườn Nho Của Cáo
+        </h1>
+
+        <p>
+            Mong cuộc đời của tôi và bạn đều rực rỡ gấm hoa,
+            cơm nóng đợi bàn, người thương đợi cửa,
+            hồng trải đường đời, viên mãn hạnh phúc
+        </p>
+
+        <button
+            class="main-btn"
+            onclick="enterGarden()">
+
+            Tham Quan Vườn Nho
+
+        </button>
+
+    </div>
+
+</section>
+
+
+
+<!-- ======================================
+     LOADING
+====================================== -->
+
+<section id="loading">
+
+    <div class="loading-box">
+
+        <h2>
+            Đợi Cáo một chút nhé...
+        </h2>
+
+        <div class="progress-wrap">
+
+            <div id="progress"></div>
+
+        </div>
+
+        <div id="loadingText">
+            Cáo đang trồng nho, bạn đợi chút
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ======================================
+     WEBSITE CHÍNH
+====================================== -->
+
+<section id="garden">
+
+
+    <!-- HEADER -->
+
+    <header class="garden-header">
+
+        <div class="header-inner">
+
+
+            <div class="brand">
+
+                <h1>
+                    Vườn Nho Của Cáo
+                </h1>
+
+                <p>
+                    Tiểu Yết Hồ chào bạn!
+                </p>
+
+            </div>
+
+
+            <button
+                class="nav-btn"
+                onclick="openTarot()">
+
+                🔮 Xem Tarot
+
+            </button>
+
+
+            <button
+                class="nav-btn"
+                onclick="openFeedback('Chung')">
+
+                💌 Feedback chung
+
+            </button>
+
+
+        </div>
+
+    </header>
+
+
+
+    <!-- HERO -->
+
+    <div class="hero-garden">
+
+        <h2>
+            Vườn Nho Của Cáo
+        </h2>
+
+        <p>
+            Tiểu Yết Hồ chào bạn!
+        </p>
+
+
+        <button
+            class="seed-btn"
+            onclick="window.open(CONFIG.personalPage,'_blank')">
+
+            Có hạt giống tốt, cứ để Cáo lo!
+
+        </button>
+
+    </div>
+
+
+
+    <!-- PROFILE -->
+
+    <section class="characters">
+
+        <h2 class="section-title">
+
+            Những quả nho đang chờ bạn hái
+
+        </h2>
+
+
+        <div
+            id="profileGrid"
+            class="profile-grid">
+
+        </div>
+
+    </section>
+
+
+</section>
+
+
+
+<!-- ======================================
+     NHẠC
+====================================== -->
+
+<button
+    id="musicBtn"
+    class="music-player"
+    title="Bật / tắt nhạc">
+
+    ♫
+
+</button>
+
+
+<audio
+    id="bgMusic"
+    loop
+    preload="auto">
+
+    <source
+        src="assets/music.mp3"
+        type="audio/mpeg">
+
+</audio>
+
+
+
+<!-- ======================================
+     TOAST
+====================================== -->
+
+<div id="toast"></div>
+
+
+
+<!-- ======================================
+     CHI TIẾT NHÂN VẬT
+====================================== -->
+
+<div
+    id="detailOverlay"
+    class="overlay">
+
+
+    <div class="modal">
+
+
+        <button
+            class="close"
+            onclick="closeOverlay('detailOverlay')">
+
+            ×
+
+        </button>
+
+
+        <img
+            id="detailImg"
+            class="detail-img"
+            src=""
+            alt="">
+
+
+        <div class="detail-body">
+
+
+            <h2 id="detailName"></h2>
+
+
+            <div
+                id="detailTag"
+                class="tag">
+            </div>
+
+
+            <p id="detailDescription"></p>
+
+
+            <div class="detail-actions">
+
+
+                <button
+                    class="action-btn"
+                    onclick="openCurrentPlot()">
+
+                    📖 ĐỌC PLOT
+
+                </button>
+
+
+                <button
+                    class="action-btn gold"
+                    onclick="openCurrentHarvest()">
+
+                    🍇 HÁI NHO
+
+                </button>
+
+
+                <button
+                    class="action-btn alt"
+                    onclick="likeCurrent()">
+
+                    ♥ Thả tim
+
+                </button>
+
+
+                <button
+                    class="action-btn alt"
+                    onclick="openFeedback(currentCharacter ? currentCharacter.name : 'Nhân vật')">
+
+                    💬 Feedback
+
+                </button>
+
+
+                <button
+                    class="action-btn alt"
+                    onclick="window.open(CONFIG.privateFeedbackPage,'_blank')">
+
+                    ✉ Feedback riêng tư
+
+                </button>
+
+
+            </div>
+
+
+            <div
+                id="detailHearts"
+                class="detail-hearts">
+            </div>
+
+
+            <div class="feedback-area">
+
+                <h3>
+                    Feedback về profile này
+                </h3>
+
+
+                <div
+                    id="detailFeedbackList"
+                    class="feedback-list">
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- ======================================
+     FEEDBACK CHUNG
+====================================== -->
+
+<div
+    id="feedbackOverlay"
+    class="overlay">
+
+
+    <div class="modal">
+
+
+        <button
+            class="close"
+            onclick="closeOverlay('feedbackOverlay')">
+
+            ×
+
+        </button>
+
+
+        <div class="detail-body">
+
+
+            <h2 id="feedbackTitle">
+                Feedback chung
+            </h2>
+
+
+            <div class="feedback-form">
+
+
+                <input
+                    id="feedbackName"
+                    placeholder="Tên / biệt danh (không bắt buộc)">
+
+
+                <textarea
+                    id="feedbackMessage"
+                    placeholder="Bạn muốn nhắn gì cho Cáo?">
+                </textarea>
+
+
+                <button
+                    class="action-btn"
+                    onclick="sendFeedback()">
+
+                    Gửi feedback công khai
+
+                </button>
+
+
+            </div>
+
+
+            <div
+                id="publicFeedbackList"
+                class="feedback-list">
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- ======================================
+     TAROT
+====================================== -->
+
+<div
+    id="tarotOverlay"
+    class="overlay">
+
+
+    <div class="modal tarot-modal">
+
+
+        <button
+            class="close"
+            onclick="closeOverlay('tarotOverlay')">
+
+            ×
+
+        </button>
+
+
+        <div id="tarotContent"></div>
+
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+
+/* =========================================================
+   CẤU HÌNH CỦA BẠN
+========================================================= */
+
+const CONFIG = {
+
+    /* FACEBOOK CÁ NHÂN */
+
+    personalPage:
+        "https://www.facebook.com/THAY-LINK-CUA-BAN",
+
+
+    /* TRANG FEEDBACK RIÊNG TƯ */
+
+    privateFeedbackPage:
+        "https://www.facebook.com/THAY-LINK-CUA-BAN",
+
+
+    /*
+       SAU NÀY BẠN SẼ DÁN LINK GOOGLE APPS SCRIPT Ở ĐÂY
+
+       Hiện tại cứ để nguyên.
+    */
+
+    googleAppsScriptUrl:
+        "DAN-LINK-GOOGLE-APPS-SCRIPT-VAO-DAY"
+
+};
+
+
+
+/* =========================================================
+   DANH SÁCH NHÂN VẬT
+========================================================= */
+
+const characters = [
+
+
+    {
+        id:"c1",
+
+        name:"Tên Nhân Vật 1",
+
+        tag:"#ngọt_ngào",
+
+        avatar:
+            "assets/avatar1.jpg",
+
+        detailImage:
+            "assets/detail1.jpg",
+
+        plot:
+            "https://docs.google.com/document/d/THAY-LINK-PLOT-1",
+
+        harvest:
+            "https://aistudio.google.com/",
+
+        description:
+            "Một chút mô tả về nhân vật 1. Bạn tự thay phần này."
+
+    },
+
+
+    {
+        id:"c2",
+
+        name:"Tên Nhân Vật 2",
+
+        tag:"#mộng_mơ",
+
+        avatar:
+            "assets/avatar2.jpg",
+
+        detailImage:
+            "assets/detail2.jpg",
+
+        plot:
+            "https://docs.google.com/document/d/THAY-LINK-PLOT-2",
+
+        harvest:
+            "https://aistudio.google.com/",
+
+        description:
+            "Một chút mô tả về nhân vật 2. Bạn tự thay phần này."
+
+    },
+
+
+    {
+        id:"c3",
+
+        name:"Tên Nhân Vật 3",
+
+        tag:"#hồng_trần",
+
+        avatar:
+            "assets/avatar3.jpg",
+
+        detailImage:
+            "assets/detail3.jpg",
+
+        plot:
+            "https://docs.google.com/document/d/THAY-LINK-PLOT-3",
+
+        harvest:
+            "https://aistudio.google.com/",
+
+        description:
+            "Một chút mô tả về nhân vật 3. Bạn tự thay phần này."
+
+    },
+
+
+    {
+        id:"c4",
+
+        name:"Tên Nhân Vật 4",
+
+        tag:"#viên_mãn",
+
+        avatar:
+            "assets/avatar4.jpg",
+
+        detailImage:
+            "assets/detail4.jpg",
+
+        plot:
+            "https://docs.google.com/document/d/THAY-LINK-PLOT-4",
+
+        harvest:
+            "https://aistudio.google.com/",
+
+        description:
+            "Một chút mô tả về nhân vật 4. Bạn tự thay phần này."
+
+    },
+
+
+    {
+        id:"c5",
+
+        name:"Tên Nhân Vật 5",
+
+        tag:"#cánh_hoa",
+
+        avatar:
+            "assets/avatar5.jpg",
+
+        detailImage:
+            "assets/detail5.jpg",
+
+        plot:
+            "https://docs.google.com/document/d/THAY-LINK-PLOT-5",
+
+        harvest:
+            "https://aistudio.google.com/",
+
+        description:
+            "Một chút mô tả về nhân vật 5."
+
+    },
+
+
+    {
+        id:"c6",
+
+        name:"Tên Nhân Vật 6",
+
+        tag:"#nho_chín",
+
+        avatar:
+            "assets/avatar6.jpg",
+
+        detailImage:
+            "assets/detail6.jpg",
+
+        plot:
+            "https://docs.google.com/document/d/THAY-LINK-PLOT-6",
+
+        harvest:
+            "https://aistudio.google.com/",
+
+        description:
+            "Một chút mô tả về nhân vật 6."
+
+    },
+
+
+    {
+        id:"c7",
+
+        name:"Tên Nhân Vật 7",
+
+        tag:"#trăng_sáng",
+
+        avatar:
+            "assets/avatar7.jpg",
+
+        detailImage:
+            "assets/detail7.jpg",
+
+        plot:
+            "https://docs.google.com/document/d/THAY-LINK-PLOT-7",
+
+        harvest:
+            "https://aistudio.google.com/",
+
+        description:
+            "Một chút mô tả về nhân vật 7."
+
+    },
+
+
+    {
+        id:"c8",
+
+        name:"Tên Nhân Vật 8",
+
+        tag:"#gió_xuân",
+
+        avatar:
+            "assets/avatar8.jpg",
+
+        detailImage:
+            "assets/detail8.jpg",
+
+        plot:
+            "https://docs.google.com/document/d/THAY-LINK-PLOT-8",
+
+        harvest:
+            "https://aistudio.google.com/",
+
+        description:
+            "Một chút mô tả về nhân vật 8."
+
+    }
+
+];
+
+
+
+/* =========================================================
+   BIẾN
+========================================================= */
+
+let currentCharacter = null;
+
+let feedbackScope = "Chung";
+
+let musicPlaying = false;
+
+
+
+/* =========================================================
+   NHẠC
+========================================================= */
+
+const music =
+    document.getElementById("bgMusic");
+
+const musicBtn =
+    document.getElementById("musicBtn");
+
+
+function tryPlayMusic(){
+
+    music.play()
+
+    .then(()=>{
+
+        musicPlaying=true;
+
+        musicBtn.classList.add("playing");
+
+    })
+
+    .catch(()=>{
+
+        /*
+           Trình duyệt có thể chặn autoplay.
+           Khi người dùng click lần đầu,
+           website sẽ thử phát lại.
+        */
+
+    });
+
+}
+
+
+musicBtn.addEventListener(
+    "click",
+    ()=>{
+
+        if(music.paused){
+
+            music.play();
+
+            musicPlaying=true;
+
+            musicBtn.classList.add(
+                "playing"
+            );
+
+        }
+
+        else{
+
+            music.pause();
+
+            musicPlaying=false;
+
+            musicBtn.classList.remove(
+                "playing"
+            );
+
+        }
+
+    }
+);
+
+
+
+document.addEventListener(
+    "click",
+    ()=>{
+
+        if(!musicPlaying){
+
+            tryPlayMusic();
+
+        }
+
+    },
+    {once:true}
+);
+
+
+
+/* =========================================================
+   ĐI VÀO VƯỜN NHO
+========================================================= */
+
+function enterGarden(){
+
+    document
+        .getElementById("opening")
+        .style.display="none";
+
+
+    document
+        .getElementById("loading")
+        .style.display="flex";
+
+
+    tryPlayMusic();
+
+
+    let progress=0;
+
+
+    const messages=[
+
+        "Cáo đang trồng nho, bạn đợi chút",
+
+        "Cáo đang lựa nho ngọt nè",
+
+        "Bạn thích nho chua hay ngọt"
+
+    ];
+
+
+    const timer=setInterval(()=>{
+
+
+        progress+=4;
+
+
+        document
+            .getElementById("progress")
+            .style.width=
+            progress+"%";
+
+
+        document
+            .getElementById("loadingText")
+            .textContent=
+            messages[
+                Math.floor(
+                    (progress/100)
+                    *messages.length
+                )
+                %
+                messages.length
+            ];
+
+
+        if(progress>=100){
+
+            clearInterval(timer);
+
+
+            setTimeout(()=>{
+
+
+                document
+                    .getElementById("loading")
+                    .style.display="none";
+
+
+                document
+                    .getElementById("garden")
+                    .style.display="block";
+
+
+                renderProfiles();
+
+
+                window.scrollTo(
+                    0,
+                    0
+                );
+
+
+            },250);
+
+        }
+
+
+    },28);
+
+}
+
+
+
+/* =========================================================
+   TIM
+========================================================= */
+
+function getLikes(){
+
+    return JSON.parse(
+        localStorage.getItem(
+            "cao_likes"
+        ) || "{}"
+    );
+
+}
+
+
+function setLikes(data){
+
+    localStorage.setItem(
+        "cao_likes",
+        JSON.stringify(data)
+    );
+
+}
+
+
+
+/* =========================================================
+   HIỂN THỊ PROFILE
+========================================================= */
+
+function renderProfiles(){
+
+    const likes =
+        getLikes();
+
+
+    document
+        .getElementById("profileGrid")
+        .innerHTML =
+
+
+        characters
+        .map(c=>`
+
+            <article
+                class="profile"
+                onclick="openCharacter('${c.id}')">
+
+
+                <img
+
+                    class="avatar"
+
+                    src="${c.avatar}"
+
+                    alt="${escapeHtml(c.name)}"
+
+                    onerror="
+                        this.src='assets/placeholder.jpg'
+                    ">
+
+
+                <h3>
+
+                    ${escapeHtml(c.name)}
+
+                </h3>
+
+
+                <div class="tag">
+
+                    ${escapeHtml(c.tag)}
+
+                </div>
+
+
+                <div class="hearts">
+
+                    ♥ ${likes[c.id] || 0}
+
+                </div>
+
+
+                <div class="mini">
+
+                    Nhấn để bước vào khu vườn
+
+                </div>
+
+
+            </article>
+
+        `)
+        .join("");
+
+}
+
+
+
+/* =========================================================
+   MỞ PROFILE
+========================================================= */
+
+function openCharacter(id){
+
+    currentCharacter =
+        characters.find(
+            c=>c.id===id
+        );
+
+
+    const likes =
+        getLikes();
+
+
+    document
+        .getElementById("detailImg")
+        .src=
+        currentCharacter.detailImage;
+
+
+    document
+        .getElementById("detailName")
+        .textContent=
+        currentCharacter.name;
+
+
+    document
+        .getElementById("detailTag")
+        .textContent=
+        currentCharacter.tag;
+
+
+    document
+        .getElementById("detailDescription")
+        .textContent=
+        currentCharacter.description;
+
+
+    document
+        .getElementById("detailHearts")
+        .textContent=
+        "♥ "+
+        (likes[id] || 0)+
+        " lượt thích";
+
+
+    document
+        .getElementById("detailOverlay")
+        .style.display="flex";
+
+
+    loadFeedback(id);
+
+}
+
+
+
+/* =========================================================
+   THẢ TIM
+========================================================= */
+
+function likeCurrent(){
+
+    if(!currentCharacter)
+        return;
+
+
+    const key =
+        "liked_"+
+        currentCharacter.id;
+
+
+    if(
+        localStorage.getItem(key)
+    ){
+
+        showToast(
+            "Bạn đã hái trái tim này rồi 🍇"
+        );
+
+        return;
+
+    }
+
+
+    const likes =
+        getLikes();
+
+
+    likes[currentCharacter.id] =
+        (likes[currentCharacter.id] || 0)
+        +1;
+
+
+    setLikes(likes);
+
+
+    localStorage.setItem(
+        key,
+        "1"
+    );
+
+
+    document
+        .getElementById("detailHearts")
+        .textContent=
+        "♥ "+
+        likes[currentCharacter.id]+
+        " lượt thích";
+
+
+    renderProfiles();
+
+
+    showToast(
+        "Cáo nhận được một trái tim rồi ♥"
+    );
+
+}
+
+
+
+/* =========================================================
+   ĐỌC PLOT
+========================================================= */
+
+function openCurrentPlot(){
+
+    if(currentCharacter){
+
+        window.open(
+            currentCharacter.plot,
+            "_blank"
+        );
+
+    }
+
+}
+
+
+
+/* =========================================================
+   HÁI NHO
+========================================================= */
+
+function openCurrentHarvest(){
+
+    if(currentCharacter){
+
+        window.open(
+            currentCharacter.harvest,
+            "_blank"
+        );
+
+    }
+
+}
+
+
+
+/* =========================================================
+   FEEDBACK
+========================================================= */
+
+function openFeedback(scope){
+
+    feedbackScope =
+        scope || "Chung";
+
+
+    document
+        .getElementById("feedbackTitle")
+        .textContent =
+
+        scope==="Chung"
+
+        ?
+
+        "Feedback chung"
+
+        :
+
+        "Feedback — "+scope;
+
+
+    document
+        .getElementById("feedbackOverlay")
+        .style.display="flex";
+
+
+    loadFeedback(
+        scope==="Chung"
+        ?
+        "Chung"
+        :
+        scope
+    );
+
+}
+
+
+
+function sendFeedback(){
+
+    const name =
+        document
+        .getElementById("feedbackName")
+        .value
+        .trim()
+        ||
+        "Một người bạn";
+
+
+    const message =
+        document
+        .getElementById("feedbackMessage")
+        .value
+        .trim();
+
+
+    if(!message){
+
+        showToast(
+            "Bạn chưa viết feedback nè 🌷"
+        );
+
+        return;
+
+    }
+
+
+    const payload={
+
+        name:name,
+
+        message:message,
+
+        scope:feedbackScope,
+
+        createdAt:
+            new Date().toISOString()
+
+    };
+
+
+    /*
+       CHƯA CÓ GOOGLE APPS SCRIPT
+       => lưu tạm trên trình duyệt
+    */
+
+    if(
+        !CONFIG
+        .googleAppsScriptUrl
+        .startsWith("http")
+    ){
+
+        const all =
+            JSON.parse(
+                localStorage.getItem(
+                    "cao_feedback"
+                ) || "[]"
+            );
+
+
+        all.unshift(payload);
+
+
+        localStorage.setItem(
+            "cao_feedback",
+            JSON.stringify(all)
+        );
+
+
+        document
+            .getElementById(
+                "feedbackMessage"
+            )
+            .value="";
+
+
+        loadFeedback(
+            feedbackScope
+        );
+
+
+        showToast(
+            "Đã lưu feedback 🌷"
+        );
+
+
+        return;
+
+    }
+
+
+    /*
+       CÓ GOOGLE APPS SCRIPT
+    */
+
+    fetch(
+        CONFIG.googleAppsScriptUrl,
+        {
+
+            method:"POST",
+
+            mode:"no-cors",
+
+            body:
+                JSON.stringify(
+                    payload
+                )
+
+        }
+    )
+
+    .then(()=>{
+
+        showToast(
+            "Đã gửi feedback 🌷"
+        );
+
+
+        document
+            .getElementById(
+                "feedbackMessage"
+            )
+            .value="";
+
+
+        setTimeout(
+            ()=>{
+
+                loadFeedback(
+                    feedbackScope
+                );
+
+            },
+            900
+        );
+
+    })
+
+    .catch(()=>{
+
+        showToast(
+            "Không gửi được feedback."
+        );
+
+    });
+
+}
+
+
+
+/* =========================================================
+   LOAD FEEDBACK
+========================================================= */
+
+async function loadFeedback(scope){
+
+    const target =
+
+        document
+        .getElementById(
+            scope==="Chung"
+            ?
+            "publicFeedbackList"
+            :
+            "detailFeedbackList"
+        );
+
+
+    if(!target)
+        return;
+
+
+    /*
+       GOOGLE APPS SCRIPT
+    */
+
+    if(
+        CONFIG
+        .googleAppsScriptUrl
+        .startsWith("http")
+    ){
+
+        try{
+
+            const response =
+                await fetch(
+                    CONFIG
+                    .googleAppsScriptUrl
+                    +
+                    "?scope="
+                    +
+                    encodeURIComponent(scope)
+                );
+
+
+            const data =
+                await response.json();
+
+
+            renderFeedback(
+                target,
+                data
+            );
+
+
+            return;
+
+        }
+
+        catch(e){
+
+        }
+
+    }
+
+
+    /*
+       LOCAL STORAGE
+    */
+
+    const all =
+        JSON.parse(
+            localStorage.getItem(
+                "cao_feedback"
+            ) || "[]"
+        );
+
+
+    renderFeedback(
+
+        target,
+
+        all.filter(
+            x=>x.scope===scope
+        )
+
+    );
+
+}
+
+
+
+/* =========================================================
+   HIỂN THỊ FEEDBACK
+========================================================= */
+
+function renderFeedback(
+    target,
+    data
+){
+
+    if(!data.length){
+
+        target.innerHTML=`
+
+            <div class="feedback-item">
+
+                Chưa có feedback nào.
+                Hãy là người đầu tiên nhé 🌷
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    target.innerHTML=
+
+        data
+        .map(x=>`
+
+            <div class="feedback-item">
+
+                <b>
+                    ${escapeHtml(
+                        x.name ||
+                        "Một người bạn"
+                    )}
+                </b>
+
+
+                <small>
+
+                    ·
+
+                    ${
+                        new Date(
+                            x.createdAt ||
+                            Date.now()
+                        )
+                        .toLocaleString(
+                            "vi-VN"
+                        )
+                    }
+
+                </small>
+
+
+                <p>
+
+                    ${escapeHtml(
+                        x.message || ""
+                    )}
+
+                </p>
+
+            </div>
+
+        `)
+        .join("");
+
+}
+
+
+
+/* =========================================================
+   TAROT
+========================================================= */
+
+const tarotCards=[
+
+
+    [
+        "The Fool",
+        "Khởi đầu, tự do, bước đi mới."
+    ],
+
+
+    [
+        "The Magician",
+        "Chủ động, năng lực, biến ý tưởng thành hành động."
+    ],
+
+
+    [
+        "The High Priestess",
+        "Trực giác, điều chưa nói, lắng nghe nội tâm."
+    ],
+
+
+    [
+        "The Empress",
+        "Nuôi dưỡng, sáng tạo, sự đủ đầy."
+    ],
+
+
+    [
+        "The Emperor",
+        "Kỷ luật, cấu trúc, trách nhiệm."
+    ],
+
+
+    [
+        "The Hierophant",
+        "Học hỏi, truyền thống, người dẫn đường."
+    ],
+
+
+    [
+        "The Lovers",
+        "Lựa chọn, kết nối, giá trị chung."
+    ],
+
+
+    [
+        "The Chariot",
+        "Ý chí, tiến lên, làm chủ hướng đi."
+    ],
+
+
+    [
+        "Strength",
+        "Kiên nhẫn, lòng can đảm, sự mềm mại có sức mạnh."
+    ],
+
+
+    [
+        "The Hermit",
+        "Chiêm nghiệm, tĩnh lặng, tìm câu trả lời bên trong."
+    ],
+
+
+    [
+        "Wheel of Fortune",
+        "Thay đổi chu kỳ, cơ hội, bước ngoặt."
+    ],
+
+
+    [
+        "Justice",
+        "Cân bằng, nguyên nhân và kết quả, sự rõ ràng."
+    ],
+
+
+    [
+        "The Hanged Man",
+        "Tạm dừng, đổi góc nhìn, buông điều cũ."
+    ],
+
+
+    [
+        "Death",
+        "Kết thúc một giai đoạn, chuyển hóa."
+    ],
+
+
+    [
+        "Temperance",
+        "Điều hòa, kiên nhẫn, dung hòa."
+    ],
+
+
+    [
+        "The Devil",
+        "Ràng buộc, ham muốn, điều cần nhìn thẳng."
+    ],
+
+
+    [
+        "The Tower",
+        "Biến động, phá vỡ cấu trúc cũ, sự thật."
+    ],
+
+
+    [
+        "The Star",
+        "Hy vọng, chữa lành, niềm tin."
+    ],
+
+
+    [
+        "The Moon",
+        "Cảm xúc, bất định, điều chưa rõ."
+    ],
+
+
+    [
+        "The Sun",
+        "Niềm vui, sáng rõ, sức sống."
+    ],
+
+
+    [
+        "Judgement",
+        "Thức tỉnh, nhìn lại, quyết định."
+    ],
+
+
+    [
+        "The World",
+        "Hoàn thành, trọn vẹn, mở sang chương mới."
+    ]
+
+];
+
+
+let tarotCount=3;
+
+let tarotTopic="";
+
+let picked=[];
+
+
+
+/* MỞ TAROT */
+
+function openTarot(){
+
+    document
+        .getElementById("tarotOverlay")
+        .style.display="flex";
+
+
+    tarotStep1();
+
+}
+
+
+
+/* BƯỚC 1 */
+
+function tarotStep1(){
+
+    document
+        .getElementById("tarotContent")
+        .innerHTML=`
+
+            <div class="tarot-step">
+
+                <h2>
+                    Bạn muốn hái bao nhiêu lá nho?
+                </h2>
+
+
+                <div class="choice-row">
+
+                    ${
+                        [3,4,5,6,7,8,9]
+                        .map(
+                            n=>`
+
+                                <button
+                                    class="choice
+                                    ${
+                                        n===3
+                                        ?
+                                        "selected"
+                                        :
+                                        ""
+                                    }"
+
+                                    onclick="
+                                        chooseTarotCount(
+                                            ${n},
+                                            this
+                                        )
+                                    ">
+
+                                    ${n}
+
+                                </button>
+
+                            `
+                        )
+                        .join("")
+                    }
+
+                </div>
+
+
+                <br>
+
+
+                <button
+                    class="action-btn"
+                    onclick="tarotStep2()">
+
+                    Tiếp tục
+
+                </button>
+
+            </div>
+
+        `;
+
+}
+
+
+
+/* CHỌN SỐ LÁ */
+
+function chooseTarotCount(
+    n,
+    element
+){
+
+    tarotCount=n;
+
+
+    document
+        .querySelectorAll(".choice")
+        .forEach(
+            x=>
+                x.classList
+                .remove("selected")
+        );
+
+
+    element
+        .classList
+        .add("selected");
+
+}
+
+
+
+/* BƯỚC 2 */
+
+function tarotStep2(){
+
+    document
+        .getElementById("tarotContent")
+        .innerHTML=`
+
+            <div class="tarot-step">
+
+                <h2>
+                    Bạn muốn xem điều gì?
+                </h2>
+
+
+                <div class="choice-row">
+
+                    ${
+                        [
+                            "Học tập",
+                            "Công việc",
+                            "Gia đình",
+                            "Tiền bạc",
+                            "Tình duyên"
+                        ]
+                        .map(
+                            topic=>`
+
+                                <button
+                                    class="choice"
+
+                                    onclick="
+                                        chooseTopic(
+                                            '${topic}',
+                                            this
+                                        )
+                                    ">
+
+                                    ${topic}
+
+                                </button>
+
+                            `
+                        )
+                        .join("")
+                    }
+
+                </div>
+
+
+                <br>
+
+
+                <button
+                    id="topicNext"
+                    class="action-btn"
+                    disabled
+                    onclick="showTarotDeck()">
+
+                    Đến với bộ bài
+
+                </button>
+
+            </div>
+
+        `;
+
+}
+
+
+
+/* CHỌN CHỦ ĐỀ */
+
+function chooseTopic(
+    topic,
+    element
+){
+
+    tarotTopic=topic;
+
+
+    document
+        .querySelectorAll(".choice")
+        .forEach(
+            x=>
+                x.classList
+                .remove("selected")
+        );
+
+
+    element
+        .classList
+        .add("selected");
+
+
+    const next =
+        document
+        .getElementById(
+            "topicNext"
+        );
+
+
+    next.disabled=false;
+
+}
+
+
+
+/* HIỆN BỘ BÀI */
+
+function showTarotDeck(){
+
+    picked=[];
+
+
+    const fan =
+        document.createElement(
+            "div"
+        );
+
+
+    fan.className="tarot-fan";
+
+
+    tarotCards.forEach(
+        (card,index)=>{
+
+
+            const element =
+                document
+                .createElement(
+                    "button"
+                );
+
+
+            element.className="card";
+
+
+            element.textContent="✦";
+
+
+            const angle =
+
+                -42 +
+
+                (
+                    index /
+                    (
+                        tarotCards.length-1
+                    )
+                )
+                *84;
+
+
+            const x =
+
+                (
+                    index -
+                    (
+                        tarotCards.length-1
+                    )/2
+                )
+                *35;
+
+
+            element.style.transform=
+
+                `translateX(${x}px)
+                 rotate(${angle}deg)`;
+
+
+            element.style.zIndex=index;
+
+
+            element.onclick=
+                ()=>
+                    pickTarot(
+                        index,
+                        element
+                    );
+
+
+            fan.appendChild(
+                element
+            );
+
+        }
+    );
+
+
+    document
+        .getElementById(
+            "tarotContent"
+        )
+        .innerHTML=`
+
+            <div class="tarot-step">
+
+                <h2>
+
+                    Chọn ${tarotCount}
+                    lá cho ${tarotTopic}
+
+                </h2>
+
+
+                <p>
+
+                    Hãy chọn từng lá bài
+                    trong bộ bài.
+
+                </p>
+
+            </div>
+
+        `;
+
+
+    document
+        .getElementById(
+            "tarotContent"
+        )
+        .appendChild(fan);
+
+
+    const info =
+        document
+        .createElement("div");
+
+
+    info.id=
+        "tarotPickInfo";
+
+
+    info.className=
+        "tarot-step";
+
+
+    info.innerHTML=`
+
+        <p>
+
+            Đã chọn:
+            0 /
+            ${tarotCount}
+
+        </p>
+
+    `;
+
+
+    document
+        .getElementById(
+            "tarotContent"
+        )
+        .appendChild(info);
+
+}
+
+
+
+/* BỐC BÀI */
+
+function pickTarot(
+    index,
+    element
+){
+
+    if(
+        picked.includes(index)
+        ||
+        picked.length>=tarotCount
+    ){
+
+        return;
+
+    }
+
+
+    picked.push(index);
+
+
+    element.style.opacity=".25";
+
+
+    element.disabled=true;
+
+
+    document
+        .getElementById(
+            "tarotPickInfo"
+        )
+        .innerHTML=`
+
+            <p>
+
+                Đã chọn:
+                ${picked.length}
+                /
+                ${tarotCount}
+
+            </p>
+
+        `;
+
+
+    if(
+        picked.length===tarotCount
+    ){
+
+        setTimeout(
+            showTarotResult,
+            350
+        );
+
+    }
+
+}
+
+
+
+/* KẾT QUẢ */
+
+function showTarotResult(){
+
+    const cards =
+        picked.map(
+            i=>tarotCards[i]
+        );
+
+
+    document
+        .getElementById(
+            "tarotContent"
+        )
+        .innerHTML=`
+
+            <div class="tarot-step">
+
+                <h2>
+
+                    Kết quả cho
+                    ${tarotTopic}
+
+                </h2>
+
+
+                <div class="tarot-result">
+
+
+                    ${
+                        cards
+                        .map(
+                            (card,index)=>`
+
+                                <div
+                                    class="tarot-card-result">
+
+
+                                    <h3>
+
+                                        Lá
+                                        ${index+1}:
+                                        ${card[0]}
+
+                                    </h3>
+
+
+                                    <p>
+
+                                        ${card[1]}
+
+                                    </p>
+
+
+                                    <p>
+
+                                        <b>
+                                            Gợi ý:
+                                        </b>
+
+                                        Với chủ đề
+                                        ${tarotTopic.toLowerCase()},
+                                        hãy xem đây như
+                                        một lời gợi mở
+                                        để tự suy ngẫm.
+
+                                    </p>
+
+                                </div>
+
+                            `
+                        )
+                        .join("")
+                    }
+
+
+                    <div
+                        class="tarot-card-result">
+
+
+                        <h3>
+                            🌙 Tổng quan
+                        </h3>
+
+
+                        <p>
+
+                            ${tarotSummary(cards)}
+
+                        </p>
+
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        `;
+
+}
+
+
+
+/* TỔNG QUAN TAROT */
+
+function tarotSummary(cards){
+
+    const names =
+        cards
+        .map(
+            card=>card[0]
+        )
+        .join(", ");
+
+
+    return `
+
+        Các lá ${names} tạo thành
+        một câu chuyện biểu tượng
+        về ${tarotTopic.toLowerCase()}.
+
+        Có điều cần nhìn nhận,
+        điều cần lựa chọn và
+        một hướng phát triển
+        phía trước.
+
+        Tarot ở đây mang tính
+        giải trí và chiêm nghiệm.
+        Bạn có thể dùng kết quả
+        như một cách đặt câu hỏi
+        cho chính mình thay vì
+        xem nó như một lời
+        tiên đoán chắc chắn.
+
+    `;
+
+}
+
+
+
+/* =========================================================
+   TIỆN ÍCH
+========================================================= */
+
+function closeOverlay(id){
+
+    document
+        .getElementById(id)
+        .style.display="none";
+
+}
+
+
+
+function showToast(message){
+
+    const toast =
+        document
+        .getElementById("toast");
+
+
+    toast.textContent=
+        message;
+
+
+    toast.classList.add(
+        "show"
+    );
+
+
+    setTimeout(
+        ()=>{
+            toast.classList.remove(
+                "show"
+            );
+        },
+        2500
+    );
+
+}
+
+
+
+function escapeHtml(text){
+
+    return String(text)
+        .replace(
+            /[&<>"']/g,
+            function(match){
+
+                return {
+
+                    "&":"&amp;",
+
+                    "<":"&lt;",
+
+                    ">":"&gt;",
+
+                    '"':"&quot;",
+
+                    "'":"&#039;"
+
+                }[match];
+
+            }
+        );
+
+}
+
+</script>
+
+</body>
+</html>

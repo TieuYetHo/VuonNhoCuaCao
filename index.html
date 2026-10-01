@@ -2060,77 +2060,7 @@ document.addEventListener(
 );
 
 
-function tryPlayMusic(){
 
-    music.play()
-
-    .then(()=>{
-
-        musicPlaying=true;
-
-        musicBtn.classList.add("playing");
-
-    })
-
-    .catch(()=>{
-
-        /*
-           Trình duyệt có thể chặn autoplay.
-           Khi người dùng click lần đầu,
-           website sẽ thử phát lại.
-        */
-
-    });
-
-}
-
-
-musicBtn.addEventListener(
-    "click",
-    ()=>{
-
-        if(music.paused){
-
-            music.play();
-
-            musicPlaying=true;
-
-            musicBtn.classList.add(
-                "playing"
-            );
-
-        }
-
-        else{
-
-            music.pause();
-
-            musicPlaying=false;
-
-            musicBtn.classList.remove(
-                "playing"
-            );
-
-        }
-
-    }
-);
-
-
-
-document.addEventListener(
-    "click",
-    ()=>{
-
-        if(!musicPlaying){
-
-            tryPlayMusic();
-
-        }
-
-    },
-    {once:true}
-);
 
 
 

@@ -3367,144 +3367,133 @@ function pickTarot(
 
 /* KẾT QUẢ */
 
-function showTarotResult(){
 
-    const cards =
-        picked.map(
-            i=>tarotCards[i]
-        );
+function showTarotResult() {
+    const cards = picked.map(i => tarotCards[i]);
 
+    const positions = [
+        "Năng lượng hiện tại",
+        "Điều đang ảnh hưởng",
+        "Gốc rễ của vấn đề",
+        "Điều cần nhìn nhận",
+        "Thử thách trước mắt",
+        "Nguồn lực bạn đang có",
+        "Hướng hành động",
+        "Điều cần buông bỏ",
+        "Xu hướng có thể phát triển"
+    ];
 
-    document
-        .getElementById(
-            "tarotContent"
-        )
-        .innerHTML=`
+    const topicGuides = {
+        "Học tập": {
+            focus: "phương pháp học, khả năng tập trung, áp lực và mục tiêu",
+            good: "chia nhỏ kiến thức, ôn tập chủ động, luyện đề và giữ nhịp học đều",
+            avoid: "so sánh bản thân với người khác, học dồn và chỉ dựa vào cảm hứng",
+            question: "Mình đang thiếu kiến thức, phương pháp hay sự kiên trì?"
+        },
+        "Công việc": {
+            focus: "năng lực, môi trường làm việc, cơ hội và định hướng nghề nghiệp",
+            good: "xác định ưu tiên, trao đổi rõ ràng và chủ động chuẩn bị cho cơ hội",
+            avoid: "quyết định vội khi đang căng thẳng hoặc ôm hết mọi việc một mình",
+            question: "Bước đi nào vừa phù hợp năng lực vừa đưa mình đến mục tiêu dài hạn?"
+        },
+        "Gia đình": {
+            focus: "sự gắn kết, kỳ vọng, ranh giới cá nhân và cách giao tiếp",
+            good: "lắng nghe, nói rõ nhu cầu và thống nhất những việc có thể thay đổi",
+            avoid: "đoán ý nhau, giữ ấm ức quá lâu hoặc nhận hết trách nhiệm về mình",
+            question: "Mình cần được thấu hiểu ở điểm nào, và có thể diễn đạt điều đó ra sao?"
+        },
+        "Tiền bạc": {
+            focus: "thói quen chi tiêu, nguồn thu, kế hoạch tiết kiệm và mức độ an toàn tài chính",
+            good: "ghi lại thu chi, lập quỹ dự phòng và cân nhắc rủi ro trước quyết định",
+            avoid: "mua sắm theo cảm xúc hoặc tin vào lời hứa lợi nhuận chắc chắn",
+            question: "Quyết định nào giúp mình ổn định tài chính mà không vượt quá khả năng?"
+        },
+        "Tình duyên": {
+            focus: "cảm xúc, sự tương thích, giao tiếp, ranh giới và mong đợi trong tình cảm",
+            good: "quan sát hành động nhất quán, nói thật lòng và tôn trọng nhu cầu của cả hai",
+            avoid: "tự suy diễn thay đối phương, lý tưởng hóa một người hoặc bỏ qua giới hạn của mình",
+            question: "Mình đang cần một mối quan hệ như thế nào, và điều đó có được đáp lại không?"
+        }
+    };
 
-            <div class="tarot-step">
+    const guide = topicGuides[tarotTopic] || topicGuides["Tình duyên"];
 
-                <h2>
+    function detailFor(card, index) {
+        const name = card[0];
+        const meaning = card[1];
+        const position = positions[index] || `Góc nhìn thứ ${index + 1}`;
 
-                    Kết quả cho
-                    ${tarotTopic}
+        const interpretations = {
+            "The Fool": "Bạn có thể đang đứng trước một khởi đầu mới. Sự cởi mở giúp bạn nhìn thấy khả năng chưa từng cân nhắc, nhưng hãy phân biệt giữa can đảm và hành động thiếu chuẩn bị.",
+            "The Magician": "Lá bài nhấn mạnh những nguồn lực bạn đã có. Thay vì chờ thời điểm hoàn hảo, hãy chọn một việc cụ thể, sử dụng kỹ năng hiện có và biến ý định thành hành động.",
+            "The High Priestess": "Có những điều bạn chưa nhìn rõ hoặc chưa sẵn sàng gọi tên. Hãy quan sát cảm xúc, kiểm chứng thông tin và cho mình thời gian trước khi kết luận.",
+            "The Empress": "Sự phát triển cần được nuôi dưỡng bằng thời gian, sự chăm sóc và môi trường phù hợp. Đừng chỉ đòi hỏi kết quả; hãy xem điều gì cần được bồi đắp mỗi ngày.",
+            "The Emperor": "Lá bài hướng đến cấu trúc, kỷ luật và trách nhiệm. Một kế hoạch rõ ràng sẽ hữu ích, miễn là bạn không biến nguyên tắc thành sự cứng nhắc.",
+            "The Hierophant": "Kiến thức, kinh nghiệm và người hướng dẫn có thể giúp bạn tiến xa hơn. Hãy học từ nguồn đáng tin, đồng thời tự đánh giá xem điều gì thực sự phù hợp với mình.",
+            "The Lovers": "Trọng tâm nằm ở sự lựa chọn và mức độ tương thích giữa các giá trị. Đừng chỉ hỏi điều gì hấp dẫn nhất; hãy hỏi điều gì phù hợp với điều bạn thật sự coi trọng.",
+            "The Chariot": "Bạn cần xác định hướng đi và giữ sự tập trung. Tiến lên không có nghĩa là ép mọi thứ xảy ra ngay lập tức; đôi khi biết điều chỉnh tốc độ mới là bản lĩnh.",
+            "Strength": "Sức mạnh ở đây đến từ khả năng điều hòa cảm xúc và kiên nhẫn. Bạn có thể tiến xa bằng sự bền bỉ, lòng tự trọng và cách ứng xử bình tĩnh.",
+            "The Hermit": "Một khoảng lặng có thể giúp bạn hiểu rõ điều mình muốn. Hãy suy ngẫm nhưng đừng tự cô lập đến mức bỏ lỡ sự hỗ trợ hữu ích từ người khác.",
+            "Wheel of Fortune": "Hoàn cảnh có thể thay đổi theo cách bạn chưa dự tính. Hãy linh hoạt, nhận ra phần mình kiểm soát được và chuẩn bị cho nhiều khả năng thay vì phụ thuộc vào may rủi.",
+            "Justice": "Lá bài nhắc bạn nhìn sự việc bằng dữ kiện, tính công bằng và hệ quả. Hãy cân nhắc cả trách nhiệm của mình lẫn những yếu tố nằm ngoài tầm kiểm soát.",
+            "The Hanged Man": "Tiến độ chậm lại có thể là dịp để đổi góc nhìn. Thay vì cố lặp lại cách cũ, hãy thử xác định giả định nào cần được xem xét lại.",
+            "Death": "Một giai đoạn hoặc cách làm cũ có thể cần khép lại để nhường chỗ cho thay đổi. Đây không phải lời báo trước về cái chết; trọng tâm là chuyển hóa và chấp nhận điều đã đến lúc kết thúc.",
+            "Temperance": "Sự cân bằng được hình thành qua những điều chỉnh nhỏ và đều đặn. Tránh cực đoan; hãy tìm cách kết hợp các nhu cầu khác nhau mà không đánh mất giới hạn quan trọng.",
+            "The Devil": "Lá bài gợi ý xem xét thói quen, nỗi sợ hoặc sự phụ thuộc đang thu hẹp lựa chọn của bạn. Nhận diện vấn đề không phải để tự trách, mà để tìm lại quyền quyết định.",
+            "The Tower": "Một niềm tin hoặc cấu trúc thiếu vững chắc có thể cần được xem xét lại. Nếu có biến động, hãy ưu tiên sự an toàn, kiểm tra sự thật và xử lý từng việc thay vì phản ứng trong hoảng loạn.",
+            "The Star": "Hy vọng có thể trở lại khi bạn cho mình thời gian hồi phục và nhìn thấy những bước tiến nhỏ. Hãy biến niềm tin thành hành động chăm sóc bản thân và mục tiêu thực tế.",
+            "The Moon": "Thông tin chưa đầy đủ hoặc cảm xúc mạnh có thể khiến bạn khó phân biệt sự thật với nỗi lo. Đừng vội kết luận; hãy kiểm chứng điều có thể kiểm chứng và chờ thêm dữ kiện.",
+            "The Sun": "Lá bài tượng trưng cho sự sáng rõ, sinh lực và khả năng nhìn thấy thành quả. Hãy ghi nhận điều đang tiến triển tốt mà vẫn giữ sự tỉnh táo khi đưa ra quyết định.",
+            "Judgement": "Đây là dịp nhìn lại lựa chọn cũ, nhận ra điều đã học và quyết định mình muốn thay đổi điều gì. Quá khứ có thể đem lại bài học, nhưng không nhất thiết phải quyết định tương lai.",
+            "The World": "Một chu kỳ có thể đang đi đến độ hoàn thiện hoặc cần được tổng kết. Hãy ghi nhận thành quả, khép lại phần còn dang dở và chuẩn bị cho bước tiếp theo."
+        };
 
-                </h2>
+        const context = interpretations[name] || meaning;
 
-
-                <div class="tarot-result">
-
-
-                    ${
-                        cards
-                        .map(
-                            (card,index)=>`
-
-                                <div
-                                    class="tarot-card-result">
-
-
-                                    <h3>
-
-                                        Lá
-                                        ${index+1}:
-                                        ${card[0]}
-
-                                    </h3>
-
-
-                                    <p>
-
-                                        ${card[1]}
-
-                                    </p>
-
-
-                                    <p>
-
-                                        <b>
-                                            Gợi ý:
-                                        </b>
-
-                                        Với chủ đề
-                                        ${tarotTopic.toLowerCase()},
-                                        hãy xem đây như
-                                        một lời gợi mở
-                                        để tự suy ngẫm.
-
-                                    </p>
-
-                                </div>
-
-                            `
-                        )
-                        .join("")
-                    }
-
-
-                    <div
-                        class="tarot-card-result">
-
-
-                        <h3>
-                            🌙 Tổng quan
-                        </h3>
-
-
-                        <p>
-
-                            ${tarotSummary(cards)}
-
-                        </p>
-
-
-                    </div>
-
-
-                </div>
-
+        return `
+            <div class="tarot-card-result">
+                <h3>Lá ${index + 1}: ${name}</h3>
+                <p><b>Vị trí:</b> ${position}</p>
+                <p><b>Ý nghĩa nền tảng:</b> ${meaning}</p>
+                <p><b>Diễn giải:</b> ${context}</p>
+                <p><b>Liên hệ với ${tarotTopic.toLowerCase()}:</b>
+                Lá này mời bạn nhìn lại ${guide.focus}. Hãy xem hoàn cảnh thực tế nào đang tương ứng với thông điệp trên, thay vì cố ép mọi chi tiết phải khớp.</p>
             </div>
-
         `;
+    }
 
-}
+    const detailedCards = cards.map((card, index) => detailFor(card, index)).join("");
 
-
-
-/* TỔNG QUAN TAROT */
-
-function tarotSummary(cards){
-
-    const names =
-        cards
-        .map(
-            card=>card[0]
-        )
-        .join(", ");
-
-
-    return `
-
-        Các lá ${names} tạo thành
-        một câu chuyện biểu tượng
-        về ${tarotTopic.toLowerCase()}.
-
-        Có điều cần nhìn nhận,
-        điều cần lựa chọn và
-        một hướng phát triển
-        phía trước.
-
-        Tarot ở đây mang tính
-        giải trí và chiêm nghiệm.
-        Bạn có thể dùng kết quả
-        như một cách đặt câu hỏi
-        cho chính mình thay vì
-        xem nó như một lời
-        tiên đoán chắc chắn.
-
+    document.getElementById("tarotContent").innerHTML = `
+        <div class="tarot-step">
+            <h2>Thông điệp dành cho bạn</h2>
+            <p>Chủ đề: <b>${tarotTopic}</b> · Trải bài ${tarotCount} lá</p>
+            <p>Mỗi lá là một góc nhìn để bạn tự chiêm nghiệm, không phải lời tiên đoán chắc chắn.</p>
+            <div class="tarot-result">
+                ${detailedCards}
+                <div class="tarot-card-result">
+                    <h3>🌙 Tổng quan trải bài</h3>
+                    <p>${tarotSummary(cards)}</p>
+                    <p><b>Điều nên ưu tiên:</b> ${guide.good}.</p>
+                    <p><b>Điều cần thận trọng:</b> ${guide.avoid}.</p>
+                    <p><b>Câu hỏi dành cho bạn:</b> ${guide.question}</p>
+                    <p><b>Bước nhỏ có thể làm ngay:</b> Viết ra một việc nằm trong khả năng kiểm soát của bạn, xác định hành động đầu tiên và thời điểm thực hiện.</p>
+                </div>
+            </div>
+            <br>
+            <button class="action-btn alt" onclick="tarotStep1()">Bốc lại từ đầu</button>
+        </div>
     `;
-
 }
 
+function tarotSummary(cards) {
+    const names = cards.map(card => card[0]).join(", ");
+
+    const first = cards[0][0];
+    const last = cards[cards.length - 1][0];
+
+    return `Trải bài gồm ${names}. Lá đầu tiên, ${first}, gợi mở điểm khởi đầu hoặc điều cần chú ý; lá cuối cùng, ${last}, đem đến một góc nhìn để bạn cân nhắc hướng phát triển. Khi đọc cả trải bài, hãy tìm những chủ đề lặp lại giữa các lá: điều gì đang hỗ trợ bạn, điều gì khiến bạn chần chừ và lựa chọn nào nằm trong khả năng của mình. Với chủ đề ${tarotTopic.toLowerCase()}, thông điệp hữu ích nhất không phải là chờ một kết quả được định sẵn, mà là dùng những câu hỏi từ trải bài để hiểu rõ tình huống, cân nhắc các lựa chọn và hành động có trách nhiệm hơn.`;
+}
 
 
 /* =========================================================

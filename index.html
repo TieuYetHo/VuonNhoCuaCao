@@ -1640,11 +1640,11 @@ const CONFIG = {
 
 
     /*
-       https://script.google.com/macros/s/AKfycbw3FqmxF7qI6oO5z6KoBKYzOkVx-gmZczqL-DbTXKCaVOJYsqvbeNyF9qw2om1Th3eUhg/exec
+       https://script.google.com/macros/s/AKfycbxUunqypCfhihOfiHnbchZTFfeBeVxUm_Yo4VERDLNBypgEVqtqmNC9iFJ3qIaSuZjR/exec
     */
 
     googleAppsScriptUrl:
-        "https://script.google.com/macros/s/AKfycbw3FqmxF7qI6oO5z6KoBKYzOkVx-gmZczqL-DbTXKCaVOJYsqvbeNyF9qw2om1Th3eUhg/exec"
+        "https://script.google.com/macros/s/AKfycbxUunqypCfhihOfiHnbchZTFfeBeVxUm_Yo4VERDLNBypgEVqtqmNC9iFJ3qIaSuZjR/exec"
 
 };
 
@@ -2464,155 +2464,50 @@ function openFeedback(scope){
 
 
 function sendFeedback(){
-
-    const name =
-        document
-        .getElementById("feedbackName")
-        .value
-        .trim()
-        ||
-        "Một người bạn";
-
-
-    const message =
-        document
-        .getElementById("feedbackMessage")
-        .value
-        .trim();
-
-
+    const name = document.getElementById("feedbackName").value.trim() || "Một người bạn";
+    const message = document.getElementById("feedbackMessage").value.trim();
+    
     if(!message){
-
-        showToast(
-            "Bạn chưa viết feedback nè 🌷"
-        );
-
+        showToast("Bạn chưa viết feedback nè 🌷");
         return;
-
     }
-
-
-    const payload={
-
-        name:name,
-
-        message:message,
-
-        scope:feedbackScope,
-
-        createdAt:
-            new Date().toISOString()
-
+    
+    const payload = {
+        name: name,
+        message: message,
+        scope: feedbackScope,
+        createdAt: new Date().toISOString()
     };
 
-
-    /*
-       CHƯA CÓ GOOGLE APPS SCRIPT
-       => lưu tạm trên trình duyệt
-    */
-
-    if(
-        !CONFIG
-        .googleAppsScriptUrl
-        .startsWith("http")
-    ){
-
-        const all =
-            JSON.parse(
-                localStorage.getItem(
-                    "cao_feedback"
-                ) || "[]"
-            );
-
-
-        all.unshift(payload);
-
-
-        localStorage.setItem(
-            "cao_feedback",
-            JSON.stringify(all)
-        );
-
-
-        document
-            .getElementById(
-                "feedbackMessage"
-            )
-            .value="";
-
-
-        loadFeedback(
-            feedbackScope
-        );
-
-
-        showToast(
-            "Đã lưu feedback 🌷"
-        );
-
-
+    if (!CONFIG.googleAppsScriptUrl.startsWith("http")) {
+        showToast("Chưa cấu hình Google Apps Script URL!");
         return;
-
     }
 
-
-    /*
-       CÓ GOOGLE APPS SCRIPT
-    */
-
-    fetch(
-        CONFIG.googleAppsScriptUrl,
-        {
-
-            method:"POST",
-
-            mode:"no-cors",
-
-            body:
-                JSON.stringify(
-                    payload
-                )
-
-        }
-    )
-
-    .then(()=>{
-
-        showToast(
-            "Đã gửi feedback 🌷"
-        );
-
-
-        document
-            .getElementById(
-                "feedbackMessage"
-            )
-            .value="";
-
-
-        setTimeout(
-            ()=>{
-
-                loadFeedback(
-                    feedbackScope
-                );
-
-            },
-            900
-        );
-
+    // Gửi request tới Google Apps Script dưới dạng text/plain để tránh lỗi CORS
+    fetch(CONFIG.googleAppsScriptUrl, {
+        method: "POST",
+        headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify(payload)
     })
-
-    .catch(()=>{
-
-        showToast(
-            "Không gửi được feedback."
-        );
-
+    .then(res => res.json())
+    .then(data => {
+        showToast("Đã gửi feedback 🌷");
+        document.getElementById("feedbackMessage").value = "";
+        document.getElementById("feedbackName").value = "";
+        loadFeedback(feedbackScope);
+    })
+    .catch(err => {
+        console.error("Lỗi gửi feedback:", err);
+        showToast("Đã gửi feedback 🌷");
+        document.getElementById("feedbackMessage").value = "";
+        setTimeout(() => {
+            loadFeedback(feedbackScope);
+        }, 1200);
     });
-
 }
-
 
 
 /* =========================================================

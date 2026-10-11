@@ -1640,11 +1640,11 @@ const CONFIG = {
 
 
     /*
-       https://script.google.com/macros/s/AKfycbxS12DNOUJFQz30M017sus46B6on7x6QZz5bOSbOuONwCnhtT7oobEb52VqkZVCXEhq/exec
+       https://script.google.com/macros/s/AKfycbwNWLbyVaOWgNav1fnud14iSIPRvcDO8B9bW-mVNm7xySublmOXFWtjQp47mlnZjznJ/exec
     */
 
     googleAppsScriptUrl:
-        "https://script.google.com/macros/s/AKfycbxS12DNOUJFQz30M017sus46B6on7x6QZz5bOSbOuONwCnhtT7oobEb52VqkZVCXEhq/exec"
+        "https://script.google.com/macros/s/AKfycbwNWLbyVaOWgNav1fnud14iSIPRvcDO8B9bW-mVNm7xySublmOXFWtjQp47mlnZjznJ/exec"
 
 };
 
@@ -2209,6 +2209,25 @@ function setLikes(data){
 
 }
 
+async function loadLikes(){
+    try {
+        const response = await fetch(
+            CONFIG.googleAppsScriptUrl + "?action=likes"
+        );
+
+        const data = await response.json();
+
+        if (!data || typeof data !== "object") return;
+
+        if (!data.success || !data.likes) return;
+
+localStorage.setItem("cao_likes", JSON.stringify(data.likes));
+        renderProfiles();
+    } catch (error) {
+        console.error("Không tải được lượt tim:", error);
+    }
+}
+
 
 
 /* =========================================================
@@ -2358,6 +2377,7 @@ function likeCurrent(){
 
     document.getElementById("detailHearts").textContent = "♥ " + likes[currentCharacter.id] + " lượt thích";
     renderProfiles();
+   loadLikes();
     showToast("Cáo nhận được một trái tim rồi ♥");
 
     // Thêm đoạn này để đẩy tim lên Google Sheets cho mọi người cùng thấy

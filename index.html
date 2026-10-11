@@ -2149,62 +2149,226 @@ function enterGarden(){
 
 
 /* =========================================================
-   TIM (ĐỒNG BỘ GOOGLE SHEET)
+   TIM
 ========================================================= */
-let remoteLikes = {};
-
-async function fetchAllLikes() {
-    if (!CONFIG.googleAppsScriptUrl.startsWith("http")) return;
-    try {
-        const response = await fetch(CONFIG.googleAppsScriptUrl + "?getAction=getLikes");
-        remoteLikes = await response.json();
-        renderProfiles(); 
-    } catch (e) {
-        console.error("Không tải được số tim:", e);
-    }
-}
 
 function getLikes(){
-    const local = JSON.parse(localStorage.getItem("cao_likes") || "{}");
-    return Object.keys(remoteLikes).length > 0 ? remoteLikes : local;
+
+    return JSON.parse(
+        localStorage.getItem(
+            "cao_likes"
+        ) || "{}"
+    );
+
 }
+
 
 function setLikes(data){
-    remoteLikes = data;
-    localStorage.setItem("cao_likes", JSON.stringify(data));
+
+    localStorage.setItem(
+        "cao_likes",
+        JSON.stringify(data)
+    );
+
 }
+
+
+
+/* =========================================================
+   HIỂN THỊ PROFILE
+========================================================= */
+
+function renderProfiles(){
+
+    const likes =
+        getLikes();
+
+
+    document
+        .getElementById("profileGrid")
+        .innerHTML =
+
+
+        characters
+        .map(c=>`
+
+            <article
+                class="profile"
+                onclick="openCharacter('${c.id}')">
+
+
+                <img
+
+                    class="avatar"
+
+                    src="${c.avatar}"
+
+                    alt="${escapeHtml(c.name)}"
+
+                    onerror="
+                        this.src='assets/placeholder.jpg'
+                    ">
+
+
+                <h3>
+
+                    ${escapeHtml(c.name)}
+
+                </h3>
+
+
+                <div class="tag">
+
+                    ${escapeHtml(c.tag)}
+
+                </div>
+
+
+                <div class="hearts">
+
+                    ♥ ${likes[c.id] || 0}
+
+                </div>
+
+
+                <div class="mini">
+
+                    Nhấn để bước vào khu vườn
+
+                </div>
+
+
+            </article>
+
+        `)
+        .join("");
+
+}
+
+
+
+/* =========================================================
+   MỞ PROFILE
+========================================================= */
+
+function openCharacter(id){
+
+    currentCharacter =
+        characters.find(
+            c=>c.id===id
+        );
+
+
+    const likes =
+        getLikes();
+
+
+    document
+        .getElementById("detailImg")
+        .src=
+        currentCharacter.detailImage;
+
+
+    document
+        .getElementById("detailName")
+        .textContent=
+        currentCharacter.name;
+
+
+    document
+        .getElementById("detailTag")
+        .textContent=
+        currentCharacter.tag;
+
+
+    document
+        .getElementById("detailDescription")
+        .textContent=
+        currentCharacter.description;
+
+
+    document
+        .getElementById("detailHearts")
+        .textContent=
+        "♥ "+
+        (likes[id] || 0)+
+        " lượt thích";
+
+
+    document
+        .getElementById("detailOverlay")
+        .style.display="flex";
+
+
+    loadFeedback(id);
+
+}
+
+
+
+/* =========================================================
+   THẢ TIM
+========================================================= */
 
 function likeCurrent(){
+
     if(!currentCharacter)
         return;
-    const key = "liked_" + currentCharacter.id;
-    if(localStorage.getItem(key)){
-        showToast("Bạn đã hái trái tim này rồi 🍇");
+
+
+    const key =
+        "liked_"+
+        currentCharacter.id;
+
+
+    if(
+        localStorage.getItem(key)
+    ){
+
+        showToast(
+            "Bạn đã hái trái tim này rồi 🍇"
+        );
+
         return;
+
     }
 
-    const charId = currentCharacter.id;
-    
-    fetch(CONFIG.googleAppsScriptUrl, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({ action: "like", characterId: charId })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if(data.status === "success") {
-            remoteLikes[charId] = data.likes;
-            localStorage.setItem(key, "1");
-            
-            document.getElementById("detailHearts").textContent = "♥ " + data.likes + " lượt thích";
-            renderProfiles();
-            showToast("Cáo nhận được một trái tim rồi ♥");
-        }
-    })
-    .catch(err => {
-        showToast("Đã thả tim thành công ♥");
-    });
+
+    const likes =
+        getLikes();
+
+
+    likes[currentCharacter.id] =
+        (likes[currentCharacter.id] || 0)
+        +1;
+
+
+    setLikes(likes);
+
+
+    localStorage.setItem(
+        key,
+        "1"
+    );
+
+
+    document
+        .getElementById("detailHearts")
+        .textContent=
+        "♥ "+
+        likes[currentCharacter.id]+
+        " lượt thích";
+
+
+    renderProfiles();
+
+
+    showToast(
+        "Cáo nhận được một trái tim rồi ♥"
+    );
+
 }
+
 
 
 /* =========================================================

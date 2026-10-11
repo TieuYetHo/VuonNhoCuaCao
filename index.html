@@ -1624,15 +1624,28 @@ button{
 /* =========================================================
    CẤU HÌNH CỦA BẠN
 ========================================================= */
+
 const CONFIG = {
+
     /* FACEBOOK CÁ NHÂN */
-    personalPage: "https://www.facebook.com/profile.php?id=61594072268271",
-    
+
+    personalPage:
+        "https://www.facebook.com/profile.php?id=61594072268271",
+
+
     /* TRANG FEEDBACK RIÊNG TƯ */
-    privateFeedbackPage: "https://www.facebook.com/profile.php?id=61594072268271",
-    
-    /* GOOGLE APPS SCRIPT URL */
-    googleAppsScriptUrl: "https://script.google.com/macros/s/AKfycbw-rSVK52gJmh0wvFrVBXbewhsULQ1jUk1Xw3hYv-TIlhqlZUdWGoRypOJIBawdm9Ku/exec"
+
+    privateFeedbackPage:
+        "https://www.facebook.com/profile.php?id=61594072268271",
+
+
+    /*
+       https://script.google.com/macros/s/AKfycbzDGMlUqdAc5IR_NeIyG6Nv7GMEDC0Y-sw22gUwslyNLBHoRdWfTK1w8bLry_6ibbo/exec
+    */
+
+    googleAppsScriptUrl:
+        "https://script.google.com/macros/s/AKfycbzDGMlUqdAc5IR_NeIyG6Nv7GMEDC0Y-sw22gUwslyNLBHoRdWfTK1w8bLry_6ibbo/exec"
+
 };
 
 
@@ -1877,9 +1890,10 @@ const characters = [
 ========================================================= */
 
 let currentCharacter = null;
+
 let feedbackScope = "Chung";
+
 let musicPlaying = false;
-let remoteLikes = {}; // 🌟 Biến mới để lưu trữ số tim chung tải từ Google Sheets
 
 
 /* =========================================================
@@ -2176,7 +2190,13 @@ function enterGarden(){
 ========================================================= */
 
 function getLikes(){
-    return remoteLikes; // Lấy trực tiếp từ dữ liệu chung đã đồng bộ
+
+    return JSON.parse(
+        localStorage.getItem(
+            "cao_likes"
+        ) || "{}"
+    );
+
 }
 
 
@@ -2327,55 +2347,63 @@ function openCharacter(id){
    THẢ TIM
 ========================================================= */
 
-
-
 function likeCurrent(){
-    if(!currentCharacter) return;
-    const key = "liked_" + currentCharacter.id;
 
-    // Chống bấm spam liên tục trên cùng 1 máy
-    if(localStorage.getItem(key)){
-        showToast("Bạn đã hái trái tim này rồi 🍇");
+    if(!currentCharacter)
         return;
+
+
+    const key =
+        "liked_"+
+        currentCharacter.id;
+
+
+    if(
+        localStorage.getItem(key)
+    ){
+
+        showToast(
+            "Bạn đã hái trái tim này rồi 🍇"
+        );
+
+        return;
+
     }
 
-    // Đánh dấu máy này đã bấm tim
-    localStorage.setItem(key, "1");
 
-    // Cộng trực tiếp lên màn hình cho mượt
-    remoteLikes[currentCharacter.id] = (remoteLikes[currentCharacter.id] || 0) + 1;
+    const likes =
+        getLikes();
 
-    document.getElementById("detailHearts").textContent = 
-        "♥ " + remoteLikes[currentCharacter.id] + " lượt thích";
+
+    likes[currentCharacter.id] =
+        (likes[currentCharacter.id] || 0)
+        +1;
+
+
+    setLikes(likes);
+
+
+    localStorage.setItem(
+        key,
+        "1"
+    );
+
+
+    document
+        .getElementById("detailHearts")
+        .textContent=
+        "♥ "+
+        likes[currentCharacter.id]+
+        " lượt thích";
+
+
     renderProfiles();
-    showToast("Cáo nhận được một trái tim rồi ♥");
 
-    // Gửi ngầm dữ liệu lên Google Sheets để cập nhật chung cho tất cả mọi người
-    if (CONFIG.googleAppsScriptUrl.startsWith("http")) {
-        fetch(CONFIG.googleAppsScriptUrl, {
-            method: "POST",
-            headers: {
-                "Content-Type": "text/plain;charset=utf-8"
-            },
-            body: JSON.stringify({
-                action: "like",
-                characterId: currentCharacter.id
-            })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                remoteLikes[data.characterId] = data.likes;
-                renderProfiles();
-                if(currentCharacter && currentCharacter.id === data.characterId) {
-                    document.getElementById("detailHearts").textContent = "♥ " + data.likes + " lượt thích";
-                }
-            }
-        })
-        .catch(err => {
-            console.error("Lỗi gửi tim lên server:", err);
-        });
-    }
+
+    showToast(
+        "Cáo nhận được một trái tim rồi ♥"
+    );
+
 }
 
 

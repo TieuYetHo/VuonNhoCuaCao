@@ -1640,11 +1640,11 @@ const CONFIG = {
 
 
     /*
-       https://script.google.com/macros/s/AKfycbzJJSY-FvEataSy_xnv8c3XKa5B0y5I3c_RWMg4Ci0BvLJKktEx0hNgIym_IFDpbk6Q/execc
+       https://script.google.com/macros/s/AKfycbxS12DNOUJFQz30M017sus46B6on7x6QZz5bOSbOuONwCnhtT7oobEb52VqkZVCXEhq/exec
     */
 
     googleAppsScriptUrl:
-        "https://script.google.com/macros/s/AKfycbzJJSY-FvEataSy_xnv8c3XKa5B0y5I3c_RWMg4Ci0BvLJKktEx0hNgIym_IFDpbk6Q/execc"
+        "https://script.google.com/macros/s/AKfycbxS12DNOUJFQz30M017sus46B6on7x6QZz5bOSbOuONwCnhtT7oobEb52VqkZVCXEhq/exec"
 
 };
 
@@ -2343,69 +2343,32 @@ function openCharacter(id){
 
 
 
-/* =========================================================
-   THẢ TIM
-========================================================= */
-
 function likeCurrent(){
-
     if(!currentCharacter)
         return;
-
-
-    const key =
-        "liked_"+
-        currentCharacter.id;
-
-
-    if(
-        localStorage.getItem(key)
-    ){
-
-        showToast(
-            "Bạn đã hái trái tim này rồi 🍇"
-        );
-
+    const key = "liked_" + currentCharacter.id;
+    if(localStorage.getItem(key)){
+        showToast("Bạn đã hái trái tim này rồi 🍇");
         return;
-
     }
-
-
-    const likes =
-        getLikes();
-
-
-    likes[currentCharacter.id] =
-        (likes[currentCharacter.id] || 0)
-        +1;
-
-
+    const likes = getLikes();
+    likes[currentCharacter.id] = (likes[currentCharacter.id] || 0) + 1;
     setLikes(likes);
+    localStorage.setItem(key, "1");
 
-
-    localStorage.setItem(
-        key,
-        "1"
-    );
-
-
-    document
-        .getElementById("detailHearts")
-        .textContent=
-        "♥ "+
-        likes[currentCharacter.id]+
-        " lượt thích";
-
-
+    document.getElementById("detailHearts").textContent = "♥ " + likes[currentCharacter.id] + " lượt thích";
     renderProfiles();
+    showToast("Cáo nhận được một trái tim rồi ♥");
 
-
-    showToast(
-        "Cáo nhận được một trái tim rồi ♥"
-    );
-
+    // Thêm đoạn này để đẩy tim lên Google Sheets cho mọi người cùng thấy
+    if (CONFIG.googleAppsScriptUrl.startsWith("http")) {
+        fetch(CONFIG.googleAppsScriptUrl, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({ action: "like", characterId: currentCharacter.id })
+        }).catch(()=>{});
+    }
 }
-
 
 
 /* =========================================================

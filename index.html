@@ -2094,29 +2094,46 @@ document.addEventListener(
 ========================================================= */
 
 function enterGarden(){
+
     document
         .getElementById("opening")
         .style.display="none";
+
+
     document
         .getElementById("loading")
         .style.display="flex";
+
+
     tryPlayMusic();
-    
-    // Gọi hàm tải số tim từ Google Sheet khi bước vào vườn
-    fetchAllLikes();
+
 
     let progress=0;
+
+
     const messages=[
+
         "Cáo đang trồng nho, bạn đợi chút",
+
         "Cáo đang lựa nho ngọt nè",
+
         "Bạn thích nho chua hay ngọt"
+
     ];
+
+
     const timer=setInterval(()=>{
+
+
         progress+=4;
+
+
         document
             .getElementById("progress")
             .style.width=
             progress+"%";
+
+
         document
             .getElementById("loadingText")
             .textContent=
@@ -2128,24 +2145,44 @@ function enterGarden(){
                 %
                 messages.length
             ];
+
+
         if(progress>=100){
+
             clearInterval(timer);
+
+
             setTimeout(()=>{
+
+
                 document
                     .getElementById("loading")
                     .style.display="none";
+
+
                 document
                     .getElementById("garden")
                     .style.display="block";
+
+
                 renderProfiles();
+
+
                 window.scrollTo(
                     0,
                     0
                 );
+
+
             },250);
+
         }
+
+
     },28);
+
 }
+
 
 
 /* =========================================================
